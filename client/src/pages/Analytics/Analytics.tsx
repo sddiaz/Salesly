@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Users, Target, Award, Activity, Zap, Brain, Send, CheckCircle
+  Users, Target, Award, Activity, Zap, Brain, Send, CheckCircle,
+  RefreshCwIcon
 } from 'lucide-react';
 import './Analytics.css';
 
@@ -186,7 +187,7 @@ const Analytics: React.FC = () => {
             <option value="1y">Last year</option>
           </select>
           <button onClick={fetchAnalytics} className="btn btn-secondary">
-            <Zap size={16} /> Refresh
+            <RefreshCwIcon size={16} /> Refresh
           </button>
         </div>
       </div>

@@ -52,6 +52,7 @@
 }
 
 .lead-summary {
+  margin-top: 10px;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
@@ -219,6 +220,10 @@
   background: var(--bg-secondary);
   color: var(--text-secondary);
   transition: all var(--transition-fast);
+}
+
+.modal-header {
+  background: none;
 }
 
 .btn-small:hover {

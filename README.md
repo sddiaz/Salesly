@@ -32,13 +32,15 @@ An intelligent Sales Development Representative (SDR) system leveraging Grok AI 
 │   │   ├── middleware/     # Error handling, validation
 │   │   └── utils/          # Utilities and validation
 │   ├── evaluation/         # AI evaluation framework
-│   ├── scripts/           # Database seeding
+│   ├── scripts/           # Database seeding scripts
+│   ├── client/            # Backend's client package (development)
 │   └── data/              # SQLite database file
 │
 ├── client/                 # React TypeScript frontend
 │   └── src/
 │       ├── components/     # Reusable UI components
 │       ├── pages/         # Main application pages
+│       ├── hooks/         # Custom React hooks
 │       └── styles/        # CSS styling
 │
 ├── docker-compose.yml      # Container orchestration
@@ -49,7 +51,7 @@ An intelligent Sales Development Representative (SDR) system leveraging Grok AI 
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 16+ (18+ recommended)
 - npm or yarn
 - Git
 
@@ -66,22 +68,22 @@ An intelligent Sales Development Representative (SDR) system leveraging Grok AI 
 
    ```bash
    cd backend
-   yarn
+   npm install
 
    # Create environment file
    cp .env.example .env
    # Add your XAI_API_KEY to .env
 
    # Start backend server
-   yarn run start
+   npm start
    ```
 
 3. **Frontend Setup** (new terminal)
 
    ```bash
    cd client
-   yarn
-   yarn run start
+   npm install
+   npm start
    ```
 
 4. **Access Application**
@@ -233,11 +235,12 @@ node evaluation/run-evals.js
 
 **Backend won't start:**
 
-```bash
+```powershell
 # Check if port 3001 is in use
 netstat -an | findstr :3001
 
 # Kill existing process and restart
+# On Windows: taskkill /F /PID <PID>
 ```
 
 **Frontend can't connect to API:**
@@ -301,6 +304,7 @@ backend/src/
 client/src/
 ├── pages/                 # Main application screens
 ├── components/            # Reusable UI components
+├── hooks/                 # Custom React hooks
 └── styles/               # CSS and styling
 ```
 
