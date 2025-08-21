@@ -1,8 +1,8 @@
 # Grok-Powered SDR System
 
-An intelligent Sales Development Representative (SDR) system leveraging Grok AI to enhance and automate the sales prospecting process.
+This is an intelligent Sales Development Representative (SDR) system leveraging Grok AI to enhance and automate the sales prospecting process.
 
-## 🚀 Features
+## Features
 
 ### Core Features
 
@@ -21,7 +21,7 @@ An intelligent Sales Development Representative (SDR) system leveraging Grok AI 
 - **Modern UI**: React TypeScript frontend with professional design
 - **RESTful API**: Comprehensive backend with SQLite database
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ├── backend/                 # Node.js/Express API server
@@ -129,7 +129,7 @@ docker run -d \
   grok-sdr:latest
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 ### Core Endpoints
 
