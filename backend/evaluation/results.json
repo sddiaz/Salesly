@@ -1,0 +1,135 @@
+{
+  "timestamp": "2025-08-21T00:50:50.802Z",
+  "summary": {
+    "total_tests": 10,
+    "passed_tests": 3,
+    "pass_rate": "30.0%"
+  },
+  "results": [
+    {
+      "category": "lead_scoring",
+      "test_name": "High-value enterprise lead - Fortune 500",
+      "response_time": 10486,
+      "passed": false,
+      "reason": "Score 72 not in expected range 80,95; Missing expected strengths: enterprise, decision maker, technology, budget authority",
+      "score_received": 72,
+      "score_expected": [
+        80,
+        95
+      ]
+    },
+    {
+      "category": "lead_scoring",
+      "test_name": "Mid-market growth company",
+      "response_time": 10643,
+      "passed": true,
+      "reason": "Missing expected strengths: growth stage, saas, director level; Missing expected concerns: mid-market budget",
+      "score_received": 65,
+      "score_expected": [
+        65,
+        80
+      ]
+    },
+    {
+      "category": "lead_scoring",
+      "test_name": "Small startup - high risk",
+      "response_time": 10057,
+      "passed": false,
+      "reason": "Score 36 not in expected range 15,35; Missing expected concerns: small company, junior level, limited budget, no decision authority",
+      "score_received": 36,
+      "score_expected": [
+        15,
+        35
+      ]
+    },
+    {
+      "category": "message_generation",
+      "test_name": "Enterprise VP initial outreach",
+      "response_time": 7165,
+      "passed": false,
+      "reason": "",
+      "quality_score": 0,
+      "max_quality_score": 6
+    },
+    {
+      "category": "message_generation",
+      "test_name": "Follow-up after initial contact",
+      "response_time": 8649,
+      "passed": false,
+      "reason": "",
+      "quality_score": 0,
+      "max_quality_score": 5
+    },
+    {
+      "category": "message_generation",
+      "test_name": "LinkedIn connection request",
+      "response_time": 7251,
+      "passed": false,
+      "reason": "Too long: 222 characters",
+      "quality_score": 1,
+      "max_quality_score": 5
+    },
+    {
+      "category": "conversation_analysis",
+      "test_name": "Interested prospect with budget timeline",
+      "response_time": 14566,
+      "passed": true,
+      "reason": "Expected urgency medium, got undefined; Missing expected insights: budget planning Q2, sales efficiency focus, growth scaling challenges"
+    },
+    {
+      "category": "conversation_analysis",
+      "test_name": "Price-sensitive prospect with concerns",
+      "response_time": 14335,
+      "passed": true,
+      "reason": "Expected urgency low, got undefined; Missing expected insights: price sensitivity, ROI focus, vendor skepticism, proof requirements"
+    },
+    {
+      "category": "outreach_sequences",
+      "test_name": "Standard outreach sequence execution",
+      "passed": false,
+      "reason": "Sequence Error: Database not initialized. Call initializeDatabase() first.",
+      "error": true
+    },
+    {
+      "category": "competitive_analysis",
+      "test_name": "Enterprise deal with known competitors",
+      "passed": false,
+      "reason": "No competitors identified; No positioning strategies provided; Insufficient discovery questions",
+      "competitors_found": 0,
+      "strategies_provided": 0
+    },
+    {
+      "category": "performance",
+      "test_name": "Response Time Analysis",
+      "passed": false,
+      "avg_response_time": 10394,
+      "max_response_time": 14566,
+      "min_response_time": 7165,
+      "total_errors": 1
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "lead_scoring",
+      "priority": "high",
+      "issue": "Low pass rate (33.3%)",
+      "suggestions": [
+        "Refine scoring criteria descriptions for clarity",
+        "Add industry-specific scoring weights",
+        "Implement score validation ranges",
+        "Add more contextual information to prompts"
+      ]
+    },
+    {
+      "category": "message_generation",
+      "priority": "high",
+      "issue": "Low pass rate (0.0%)",
+      "suggestions": [
+        "Improve personalization prompts",
+        "Add message length validation",
+        "Implement tone consistency checks",
+        "Create message quality scoring system"
+      ]
+    }
+  ]
+}
