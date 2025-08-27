@@ -75,7 +75,7 @@ const GrokConsultModal: React.FC<GrokConsultModalProps> = ({
 
   return (
     <div className="modal-overlay">
-      <div className="grok-modal-content">
+      <div className="modal-content grok-modal-content">
         <div className="modal-header">
           <div className="header-info">
             <div className="header-icon">
@@ -91,7 +91,7 @@ const GrokConsultModal: React.FC<GrokConsultModalProps> = ({
           </button>
         </div>
 
-        <div className="consultation-content">
+        <div className="modal-body consultation-content">
           {!response && (
             <form onSubmit={handleSubmit} className="query-form">
               <div className="form-group">
@@ -151,6 +151,7 @@ const GrokConsultModal: React.FC<GrokConsultModalProps> = ({
                 >
                   {loading ? (
                     <>
+                      <div className="spinner" />
                       Consulting Grok...
                     </>
                   ) : (

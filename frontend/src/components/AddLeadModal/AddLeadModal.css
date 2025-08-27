@@ -1,0 +1,82 @@
+/* AddLeadModal - Specific Styles */
+
+.modal-header h2 {
+  background: var(--accent-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.modal-form {
+  padding: var(--spacing-lg);
+}
+
+.form-group label svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  margin-right: 3px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  min-height: 40px;
+  line-height: 1.4;
+}
+
+.form-group textarea {
+  min-height: 60px;
+  max-height: 120px;
+  font-family: inherit;
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: flex-end;
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-light);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: var(--spacing-sm);
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    width: 95%;
+    margin: var(--spacing-lg);
+  }
+
+  .modal-header {
+    padding: var(--spacing-md);
+  }
+
+  .modal-form {
+    padding: var(--spacing-md);
+  }
+}

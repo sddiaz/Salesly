@@ -69,7 +69,7 @@ const GeneralGrokModal: React.FC<GeneralGrokModalProps> = ({
           context: {
             timestamp: new Date().toISOString(),
             source: 'general_consultation',
-            systemData: systemData // Provide actual system data to Grok
+            systemData: systemData
           }
         }),
       });

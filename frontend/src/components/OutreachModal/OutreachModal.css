@@ -1,54 +1,9 @@
+/* OutreachModal - Specific Styles */
+
 .outreach-modal {
   max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  color: var(--text-primary);
-  padding: 2rem;
-}
-
-.modal-body {
-  padding: 0;
-  margin: 0;
-}
-
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.875rem;
-}
-
-.form-group textarea,
-.form-group input {
-  width: 100%;
-  padding: 1rem;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  transition: all var(--transition-fast);
-  resize: vertical;
-  min-height: 120px;
-}
-
-.form-group textarea:focus,
-.form-group input:focus {
-  outline: none;
-  border-color: var(--accent-orange);
-  box-shadow: 0 0 0 2px rgba(255, 99, 8, 0.1);
 }
 
 .lead-summary {
@@ -100,17 +55,6 @@
 
 .message-type-selector {
   margin-bottom: 1.5rem;
-}
-
-.message-type-selector label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.875rem;
 }
 
 .type-options {
@@ -222,10 +166,6 @@
   transition: all var(--transition-fast);
 }
 
-.modal-header {
-  background: none;
-}
-
 .btn-small:hover {
   border-color: var(--border-medium);
   background: rgba(255, 255, 255, 0.1);
@@ -315,42 +255,6 @@
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.error-message {
-  background: rgba(220, 53, 69, 0.1);
-  color: #ff6b6b;
-  padding: 0.75rem;
-  border-radius: var(--radius-sm);
-  margin: 1rem 0;
-  border: 1px solid rgba(220, 53, 69, 0.2);
-  font-family: var(--font-mono);
-  font-size: 0.875rem;
-}
-
-/* Custom scrollbar for modal */
-.outreach-modal::-webkit-scrollbar {
-  width: 6px;
-}
-
-.outreach-modal::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-}
-
-.outreach-modal::-webkit-scrollbar-thumb {
-  background: var(--border-medium);
-  border-radius: var(--radius-sm);
-}
-
-.outreach-modal::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-orange);
-}
-
-/* Loading state styling */
 .generating-indicator {
   display: flex;
   align-items: center;
@@ -360,18 +264,6 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
-  font-size: 0.875rem;
-}
-
-/* Success message styling */
-.success-message {
-  background: rgba(255, 99, 8, 0.1);
-  color: var(--accent-orange);
-  padding: 0.75rem;
-  border-radius: var(--radius-sm);
-  margin: 1rem 0;
-  border: 1px solid rgba(255, 99, 8, 0.2);
-  font-family: var(--font-mono);
   font-size: 0.875rem;
 }
 

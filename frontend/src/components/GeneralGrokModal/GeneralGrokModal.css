@@ -1,206 +1,33 @@
-/* General Grok Modal Styles */
+/* GeneralGrokModal - Specific Styles */
 
-/* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: var(--spacing-lg);
-  backdrop-filter: blur(8px);
-}
-
+/* Override modal content max-width for this specific modal */
 .general-grok-modal-content {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-lg);
-  width: 100%;
   max-width: 800px;
-  max-height: 90vh;
-  overflow: hidden;
-  box-shadow: var(--shadow-strong);
-  animation: modalSlideIn var(--transition-normal) ease-out;
-  display: flex;
-  flex-direction: column;
 }
 
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+/* Specific responsive design for General Grok Modal */
+@media (max-width: 1024px) {
+  .general-grok-modal-content {
+    max-width: 700px;
   }
 }
 
-/* Modal Header */
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-lg);
-  border-bottom: 1px solid var(--border-light);
-  background: var(--bg-tertiary);
-}
+@media (max-width: 768px) {
+  .general-grok-modal-content {
+    width: 100%;
+    max-height: 95vh;
+  }
 
-.modal-header .header-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
+  .question-buttons {
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
 
-.header-icon {
-  background: var(--accent-gradient);
-  color: var(--text-primary);
-  padding: var(--spacing-sm);
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.header-info h2 {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: 1.25rem;
-  font-weight: 600;
-  font-family: var(--font-sans);
-}
-
-.header-info p {
-  margin: 0;
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.modal-close {
-  background: transparent;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  color: var(--text-muted);
-  padding: var(--spacing-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-close:hover {
-  background: var(--bg-primary);
-  border-color: var(--border-medium);
-  color: var(--text-primary);
-}
-
-/* Main Content */
-.consultation-content {
-  padding: var(--spacing-lg);
-  overflow-y: auto;
-  flex: 1;
-}
-
-/* Query Form */
-.query-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.form-group label {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
-}
-
-.form-group textarea {
-  padding: var(--spacing-md);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  font-size: 0.875rem;
-  font-family: var(--font-sans);
-  line-height: 1.5;
-  resize: vertical;
-  min-height: 120px;
-  transition: all var(--transition-normal);
-  outline: none;
-}
-
-.form-group textarea:focus {
-  border-color: var(--border-strong);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-  background: var(--bg-primary);
-}
-
-.form-group textarea::placeholder {
-  color: var(--text-muted);
-  line-height: 1.4;
-}
-
-/* Quick Questions */
-.quick-questions {
-  background: var(--bg-primary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
-}
-
-.quick-questions p {
-  margin: 0 0 var(--spacing-md) 0;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
-}
-
-.question-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-sm);
-}
-
-.question-btn {
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  outline: none;
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
+  .question-btn {
+    text-align: left;
+    justify-content: flex-start;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
 }
 
 .question-btn:hover {
@@ -403,7 +230,7 @@
   .modal-overlay {
     padding: var(--spacing-md);
   }
-  
+
   .general-grok-modal-content {
     max-width: 700px;
   }
@@ -413,46 +240,46 @@
   .modal-overlay {
     padding: var(--spacing-sm);
   }
-  
+
   .general-grok-modal-content {
     width: 100%;
     max-height: 95vh;
   }
-  
+
   .modal-header {
     padding: var(--spacing-md);
   }
-  
+
   .consultation-content {
     padding: var(--spacing-md);
   }
-  
+
   .question-buttons {
     flex-direction: column;
     gap: var(--spacing-xs);
   }
-  
+
   .question-btn {
     text-align: left;
     justify-content: flex-start;
     padding: var(--spacing-sm) var(--spacing-md);
   }
-  
+
   .form-actions,
   .response-actions {
     flex-direction: column-reverse;
     gap: var(--spacing-sm);
   }
-  
+
   .btn {
     width: 100%;
     justify-content: center;
   }
-  
+
   .header-info h2 {
     font-size: 1.125rem;
   }
-  
+
   .header-info p {
     font-size: 0.75rem;
   }
@@ -462,13 +289,13 @@
   .modal-overlay {
     padding: var(--spacing-xs);
   }
-  
+
   .modal-header {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-sm);
   }
-  
+
   .modal-close {
     align-self: flex-end;
   }

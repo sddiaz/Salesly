@@ -153,9 +153,16 @@
 .status-dot {
   width: 8px;
   height: 8px;
-  background-color: var(--success);
   border-radius: 50%;
   animation: pulse 2s infinite;
+}
+
+.connected {
+  background-color: var(--success);
+}
+
+.disconnected {
+  background-color: var(--error);
 }
 
 @keyframes pulse {
@@ -291,13 +298,5 @@
 
   .header-actions {
     flex-shrink: 0;
-  }
-
-  .header-actions .btn {
-    visibility: hidden;
-  }
-  
-  .btn {
-    visibility: hidden;
   }
 }
