@@ -1,5 +1,5 @@
 [DEMO](https://drive.google.com/file/d/1za4oTDRFVq4g-CpvKISKvCbDBw_hXFzW/view?usp=sharing)
-# Grok-Powered SDR System
+# Grok-Powered Sales Rep
 
 This is an intelligent Sales Development Representative (SDR) system leveraging Grok AI to enhance and automate the sales prospecting process.
 
