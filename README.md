@@ -1,9 +1,3 @@
-Final Commit: 9:53 PM CST
-Time remaining: 
-<img width="1039" height="355" alt="image" src="https://github.com/user-attachments/assets/dbe0db3a-133f-4c78-b527-1430e9f69cea" />
-
-
-
 # Grok-Powered SDR System
 
 This is an intelligent Sales Development Representative (SDR) system leveraging Grok AI to enhance and automate the sales prospecting process.
