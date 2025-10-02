@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Users, Target, Award, Activity, Zap, Brain, Send, CheckCircle,
+  Users, Target, Award, Activity, Brain, Send, CheckCircle,
   RefreshCwIcon
 } from 'lucide-react';
+import LoadingSpinner from '../../components/LoadingSpinner';
 import './Analytics.css';
 
 interface AnalyticsData {
@@ -20,14 +21,27 @@ interface AnalyticsData {
   };
 }
 
+interface AIInsight {
+  id: string;
+  title: string;
+  description: string;
+  category: 'lead_quality' | 'outreach' | 'pipeline' | 'competitive' | 'general';
+  confidence: number;
+  impact: 'high' | 'medium' | 'low';
+}
+
 const Analytics: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [timeRange, setTimeRange] = useState('30d');
+  const [insights, setInsights] = useState<AIInsight[]>([]);
+  const [insightsLoading, setInsightsLoading] = useState(true);
+  const [insightsError, setInsightsError] = useState('');
 
   useEffect(() => {
     fetchAnalytics();
+    fetchInsights();
   }, [timeRange]);
 
   const fetchAnalytics = async () => {
@@ -45,6 +59,64 @@ const Analytics: React.FC = () => {
       setError(err instanceof Error ? err.message : 'Failed to load analytics');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchInsights = async () => {
+    try {
+      setInsightsLoading(true);
+      setInsightsError('');
+      
+      // Fetch top 100 leads or all leads for analysis
+      const insightsResponse = await fetch('/api/analytics/ai-insights?limit=100');
+
+      if (!insightsResponse.ok) {
+        throw new Error('Failed to fetch AI insights');
+      }
+
+      const insightsData = await insightsResponse.json();
+      setInsights(insightsData.insights || []);
+    } catch (err) {
+      console.warn('AI insights not available, using fallback:', err);
+      setInsightsError(err instanceof Error ? err.message : 'Failed to load AI insights');
+      
+      // Fallback to some default insights if API fails
+      setInsights([
+        {
+          id: '1',
+          title: 'Lead Quality Trend',
+          description: 'Average lead score has increased by 12% this month. Focus on enterprise prospects is paying off.',
+          category: 'lead_quality',
+          confidence: 85,
+          impact: 'high'
+        },
+        {
+          id: '2',
+          title: 'Outreach Optimization',
+          description: 'LinkedIn messages have 3x higher response rate than emails for VP+ contacts. Consider shifting strategy.',
+          category: 'outreach',
+          confidence: 92,
+          impact: 'high'
+        },
+        {
+          id: '3',
+          title: 'Pipeline Velocity',
+          description: 'Leads with scores above 80 convert 40% faster. Prioritize high-scoring prospects for immediate outreach.',
+          category: 'pipeline',
+          confidence: 78,
+          impact: 'medium'
+        },
+        {
+          id: '4',
+          title: 'Competitive Intelligence',
+          description: 'HubSpot mentioned in 60% of conversations. Prepare competitive positioning materials.',
+          category: 'competitive',
+          confidence: 65,
+          impact: 'medium'
+        }
+      ]);
+    } finally {
+      setInsightsLoading(false);
     }
   };
 
@@ -152,10 +224,7 @@ const Analytics: React.FC = () => {
   if (loading) {
     return (
       <div className="analytics-page">
-        <div className="loading-state">
-          <div className="spinner"></div>
-          <p>Loading analytics...</p>
-        </div>
+        <LoadingSpinner message="Loading analytics..." />
       </div>
     );
   }
@@ -234,25 +303,47 @@ const Analytics: React.FC = () => {
 
       {/* AI Insights */}
       <div className="ai-insights">
-        <h3><Brain size={20} /> AI-Powered Insights</h3>
-        <div className="insights-grid">
-          <div className="insight-card">
-            <h4>Lead Quality Trend</h4>
-            <p>Average lead score has increased by 12% this month. Focus on enterprise prospects is paying off.</p>
-          </div>
-          <div className="insight-card">
-            <h4>Outreach Optimization</h4>
-            <p>LinkedIn messages have 3x higher response rate than emails for VP+ contacts. Consider shifting strategy.</p>
-          </div>
-          <div className="insight-card">
-            <h4>Pipeline Velocity</h4>
-            <p>Leads with scores above 80 convert 40% faster. Prioritize high-scoring prospects for immediate outreach.</p>
-          </div>
-          <div className="insight-card">
-            <h4>Competitive Intelligence</h4>
-            <p>HubSpot mentioned in 60% of conversations. Prepare competitive positioning materials.</p>
-          </div>
+        <div className="ai-insights-header">
+          <h3><Brain size={20} /> AI-Powered Insights</h3>
+          {!insightsLoading && (
+            <button 
+              onClick={fetchInsights} 
+              className="btn btn-secondary btn-small"
+              disabled={insightsLoading}
+            >
+              <RefreshCwIcon size={14} /> Refresh Insights
+            </button>
+          )}
         </div>
+        
+        {insightsLoading ? (
+          <div className="insights-loading">
+            <LoadingSpinner message="Analyzing your leads and generating insights..." size="medium" centered={false} />
+          </div>
+        ) : insightsError ? (
+          <div className="insights-error">
+            <b>Unable to generate AI insights: {insightsError}</b>
+          </div>
+        ) : (
+          <div className="insights-grid">
+            {insights.map((insight) => (
+              <div key={insight.id} className="insight-card">
+                <div className="insight-header">
+                  <h4>{insight.title}</h4>
+                  <div className="insight-meta">
+                    <span className={`confidence-badge confidence-${insight.confidence >= 80 ? 'high' : insight.confidence >= 60 ? 'medium' : 'low'}`}>
+                      {insight.confidence}% confidence
+                    </span>
+                    <span className={`impact-badge impact-${insight.impact}`}>
+                      {insight.impact} impact
+                    </span>
+                  </div>
+                </div>
+                <p>{insight.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

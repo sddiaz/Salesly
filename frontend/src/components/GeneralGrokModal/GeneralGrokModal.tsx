@@ -108,7 +108,7 @@ const GeneralGrokModal: React.FC<GeneralGrokModalProps> = ({
     },
     {
       icon: Lightbulb,
-      text: "What insights about lead quality?",
+      text: "Quick insights on our lead quality?",
     }
   ];
 

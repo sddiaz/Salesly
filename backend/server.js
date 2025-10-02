@@ -7,9 +7,9 @@ const path = require('path');
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 
 // Import our modules
-const { initializeDatabase } = require('./src/database/init');
 const { createGrokClient } = require('./src/services/grok');
-const apiRoutes = require('./src/routes/api');
+const { FirestoreService } = require('./src/services/firestore');
+const firestoreApiRoutes = require('./src/routes/firestore-api');
 const { errorHandler, notFound } = require('./src/middleware/error');
 const { validateEnvironment } = require('./src/utils/validation');
 
@@ -49,7 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(rateLimitMiddleware);
 
 // API routes
-app.use('/api', apiRoutes);
+app.use('/api', firestoreApiRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -93,17 +93,19 @@ async function startServer() {
     console.log('🔧 Validating environment...');
     validateEnvironment();
     
-    console.log('🗄️ Initializing database...');
-    await initializeDatabase();
+    console.log('� Initializing Firestore...');
+    const firestoreService = new FirestoreService();
+    console.log('✅ Firestore initialized');
     
     console.log('🤖 Initializing Grok client...');
     createGrokClient();
     
     app.listen(PORT, () => {
-      console.log(`🚀 Grok SDR System running on port ${PORT}`);
+      console.log(`🚀 Salesly Firestore API running on port ${PORT}`);
       console.log(`📊 Health check: http://localhost:${PORT}/health`);
       console.log(`🌐 Frontend: http://localhost:${PORT}`);
       console.log(`🔌 API: http://localhost:${PORT}/api`);
+      console.log(`🔥 Database: Firestore`);
     });
   } catch (error) {
     console.error('💥 Failed to start server:', error.message);

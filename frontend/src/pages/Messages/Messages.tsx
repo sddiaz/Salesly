@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import LoadingSpinner from '../../components/LoadingSpinner';
 import { 
   Search, 
   Mail, 
@@ -184,7 +185,6 @@ const Messages: React.FC = () => {
       <div className="search-container">
         <div className="search-bar">
           <div className="search-input-wrapper">
-            <Search size={20} className="search-icon" />
             <input
               type="text"
               placeholder="Search messages, conversations, leads... (e.g., 'healthcare', 'proposal', 'Walmart')"
@@ -201,14 +201,15 @@ const Messages: React.FC = () => {
                 <X size={16} />
               </button>
             )}
+            <button 
+              onClick={handleSearch}
+              disabled={loading || !searchQuery.trim()}
+              className="search-button"
+              title={loading ? 'Searching...' : 'Search'}
+            >
+              <Search size={18} />
+            </button>
           </div>
-          <button 
-            onClick={handleSearch}
-            disabled={loading || !searchQuery.trim()}
-            className="btn btn-primary search-btn"
-          >
-            {loading ? 'Searching...' : 'Search'}
-          </button>
         </div>
 
         {/* Search Type Selector */}
@@ -277,6 +278,13 @@ const Messages: React.FC = () => {
       {error && (
         <div className="error-message">
           {error}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {loading && hasSearched && (
+        <div className="search-loading">
+          <LoadingSpinner message="Searching..." size="medium" centered={false} />
         </div>
       )}
 

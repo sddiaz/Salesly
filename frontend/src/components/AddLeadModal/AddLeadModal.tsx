@@ -40,6 +40,7 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -49,12 +50,57 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
       ...prev,
       [name]: value,
     }));
+    
+    // Clear validation error when user starts typing
+    if (validationErrors[name]) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+    
+    if (!formData.first_name.trim()) {
+      errors.first_name = "First name is required";
+    }
+    
+    if (!formData.last_name.trim()) {
+      errors.last_name = "Last name is required";
+    }
+    
+    if (!formData.email.trim()) {
+      errors.email = "Email address is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = "Please enter a valid email address";
+    }
+    
+    if (!formData.company.trim()) {
+      errors.company = "Company name is required";
+    }
+    
+    if (!formData.industry.trim()) {
+      errors.industry = "Industry selection is required";
+    }
+    
+    return errors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError("");
+    setValidationErrors({});
+    
+    // Validate form
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      return;
+    }
+    
+    setLoading(true);
 
     try {
       const response = await fetch("/api/leads", {
@@ -83,6 +129,7 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
         linkedin_url: "",
         website: "",
       });
+      setValidationErrors({});
       onLeadAdded();
       onClose();
     } catch (err) {
@@ -98,7 +145,15 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>Add New Lead</h2>
+          <div className="header-info">
+            <div className="header-icon">
+              <User size={20} />
+            </div>
+            <div>
+              <h2>Add New Lead</h2>
+              <p>Create a new prospect in your sales pipeline</p>
+            </div>
+          </div>
           <button className="modal-close" onClick={onClose}>
             <X size={20} />
           </button>
@@ -106,10 +161,9 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
 
         <form onSubmit={handleSubmit} className="modal-form">
           <div className="form-grid">
-            <div className="form-group">
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <User size={16} />
-                First Name *
+            <div className={`form-group ${validationErrors.first_name ? 'error' : ''}`}>
+              <label>
+                <User size={16} /> First Name
               </label>
               <input
                 type="text"
@@ -117,14 +171,16 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 value={formData.first_name}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter first name"
+                placeholder="e.g., John"
               />
+              {validationErrors.first_name && (
+                <span className="field-error">{validationErrors.first_name}</span>
+              )}
             </div>
 
-            <div className="form-group">
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <User size={16} />
-                Last Name *
+            <div className={`form-group ${validationErrors.last_name ? 'error' : ''}`}>
+              <label>
+                <User size={16} /> Last Name
               </label>
               <input
                 type="text"
@@ -132,14 +188,16 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 value={formData.last_name}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter last name"
+                placeholder="e.g., Smith"
               />
+              {validationErrors.last_name && (
+                <span className="field-error">{validationErrors.last_name}</span>
+              )}
             </div>
 
-            <div className="form-group">
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <Mail size={16} />
-                Email *
+            <div className={`form-group ${validationErrors.email ? 'error' : ''}`}>
+              <label>
+                <Mail size={16} /> Email Address
               </label>
               <input
                 type="email"
@@ -147,14 +205,16 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 value={formData.email}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter email address"
+                placeholder="john.smith@company.com"
               />
+              {validationErrors.email && (
+                <span className="field-error">{validationErrors.email}</span>
+              )}
             </div>
 
-            <div className="form-group">
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <Building size={16} />
-                Company *
+            <div className={`form-group ${validationErrors.company ? 'error' : ''}`}>
+              <label>
+                <Building size={16} /> Company
               </label>
               <input
                 type="text"
@@ -162,50 +222,55 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
                 value={formData.company}
                 onChange={handleInputChange}
                 required
-                placeholder="Enter company name"
+                placeholder="e.g., Acme Corporation"
               />
+              {validationErrors.company && (
+                <span className="field-error">{validationErrors.company}</span>
+              )}
             </div>
 
             <div className="form-group">
-              <label>Job Title</label>
+              <label>
+                <User size={16} /> Job Title
+              </label>
               <input
                 type="text"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder="Enter job title"
+                placeholder="e.g., Senior Developer"
               />
             </div>
 
             <div className="form-group">
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <Phone size={16} />
-                Phone
+              <label>
+                <Phone size={16} /> Phone Number
               </label>
               <input
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleInputChange}
-                placeholder="Enter phone number"
+                placeholder="+1 (555) 123-4567"
               />
             </div>
 
             <div className="form-group">
-              <label>LinkedIn URL</label>
+              <label>
+                <Globe size={16} /> LinkedIn Profile
+              </label>
               <input
                 type="url"
                 name="linkedin_url"
                 value={formData.linkedin_url}
                 onChange={handleInputChange}
-                placeholder="https://linkedin.com/in/..."
+                placeholder="https://linkedin.com/in/johnsmith"
               />
             </div>
 
             <div className="form-group">
-              <label style={{ display: 'flex', alignItems: 'center' }}>
-                <Globe size={16} />
-                Website
+              <label>
+                <Globe size={16} /> Company Website
               </label>
               <input
                 type="url"
@@ -217,38 +282,48 @@ const AddLeadModal: React.FC<AddLeadModalProps> = ({
             </div>
 
             <div className="form-group">
-              <label>Company Size</label>
+              <label>
+                <Building size={16} /> Company Size
+              </label>
               <select
                 name="company_size"
                 value={formData.company_size}
                 onChange={handleInputChange}
               >
                 <option value="">Select company size</option>
-                <option value="1-10">1-10 employees</option>
-                <option value="11-50">11-50 employees</option>
-                <option value="51-200">51-200 employees</option>
-                <option value="201-1000">201-1000 employees</option>
-                <option value="1000+">1000+ employees</option>
+                <option value="1-10">Startup (1-10 employees)</option>
+                <option value="11-50">Small (11-50 employees)</option>
+                <option value="51-200">Medium (51-200 employees)</option>
+                <option value="201-1000">Large (201-1000 employees)</option>
+                <option value="1000+">Enterprise (1000+ employees)</option>
               </select>
             </div>
 
-            <div className="form-group">
-              <label>Industry *</label>
+            <div className={`form-group ${validationErrors.industry ? 'error' : ''}`}>
+              <label>
+                <Building size={16} /> Industry
+              </label>
               <select
                 name="industry"
                 value={formData.industry}
                 onChange={handleInputChange}
+                required
               >
                 <option value="">Select industry</option>
-                <option value="Technology">Technology</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Finance">Finance</option>
-                <option value="Manufacturing">Manufacturing</option>
-                <option value="Retail">Retail</option>
-                <option value="Education">Education</option>
-                <option value="Consulting">Consulting</option>
+                <option value="Technology">Technology & Software</option>
+                <option value="Healthcare">Healthcare & Life Sciences</option>
+                <option value="Finance">Financial Services</option>
+                <option value="Manufacturing">Manufacturing & Industrial</option>
+                <option value="Retail">Retail & E-commerce</option>
+                <option value="Education">Education & Training</option>
+                <option value="Consulting">Consulting & Professional Services</option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Media">Media & Entertainment</option>
                 <option value="Other">Other</option>
               </select>
+              {validationErrors.industry && (
+                <span className="field-error">{validationErrors.industry}</span>
+              )}
             </div>
           </div>
 

@@ -1,0 +1,10 @@
+/* Landing Page Styles */
+.landing-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.landing-page main {
+  position: relative;
+  z-index: 1;
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AddLeadModal from "../../components/AddLeadModal/AddLeadModal";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { useApiService } from "../../services/api";
 import "./Leads.css";
 
 interface Lead {
@@ -20,24 +22,28 @@ const Leads: React.FC = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const apiService = useApiService();
 
-  useEffect(() => {
-    fetchLeads();
-  }, []);
-
-  const fetchLeads = async () => {
+  const fetchLeads = React.useCallback(async () => {
     try {
-      const response = await fetch("/api/leads");
-      const data = await response.json();
-      setLeads(data.leads);
-    } catch (error) {
+      setLoading(true);
+      setError(null);
+      const data = await apiService.getLeads();
+      setLeads(data.leads || []);
+    } catch (error: any) {
       console.error("Failed to fetch leads:", error);
-      // Mock data fallback
+      setError(error.message || "Failed to fetch leads");
+      // Set empty array as fallback
       setLeads([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiService]);
+
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
 
   const getScoreLevel = (score: number) => {
     if (score >= 70) return "high";
@@ -47,9 +53,22 @@ const Leads: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="leads loading">
-        <div className="spinner"></div>
-        <span>Loading leads...</span>
+      <div className="leads">
+        <LoadingSpinner message="Loading leads..." />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="leads error">
+        <div className="error-message">
+          <h2>Unable to load leads</h2>
+          <p>{error}</p>
+          <button className="btn" onClick={fetchLeads}>
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
@@ -64,7 +83,7 @@ const Leads: React.FC = () => {
         <button
           className="btn"
           onClick={() => setShowAddModal(true)}
-          style={{ fontWeight: "bold" }}
+          style={{ fontWeight: "bold", marginBottom: "10px" }}
         >
           Add Lead +
         </button>
@@ -83,7 +102,7 @@ const Leads: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {leads.map((lead) => (
+            {leads && leads.length > 0 ? leads.map((lead) => (
               <tr key={lead.id}>
                 <td>
                   <div className="lead-name">
@@ -133,7 +152,22 @@ const Leads: React.FC = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+            )) : (
+              <tr>
+                <td colSpan={6} style={{ textAlign: 'center', padding: '40px' }}>
+                  <div className="no-leads">
+                    <h3>No leads found</h3>
+                    <p>Get started by adding your first lead!</p>
+                    <button
+                      className="btn"
+                      onClick={() => setShowAddModal(true)}
+                    >
+                      Add Lead +
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

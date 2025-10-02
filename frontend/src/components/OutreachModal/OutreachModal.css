@@ -6,6 +6,26 @@
   overflow-y: auto;
 }
 
+/* Close button styling - make it red on hover like browser close buttons */
+.outreach-modal .modal-close {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.outreach-modal .modal-close:hover {
+  background: #ef4444;
+  border-color: #dc2626;
+  color: white;
+  transform: none;
+}
+
 .lead-summary {
   margin-top: 10px;
   background: var(--bg-tertiary);
@@ -57,6 +77,17 @@
   margin-bottom: 1.5rem;
 }
 
+.message-type-selector label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .type-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -91,6 +122,47 @@
   border-color: var(--accent-orange);
   background: var(--accent-orange);
   color: var(--bg-primary);
+}
+
+/* Form styling for additional context */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  transition: all var(--transition-fast);
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 0 2px rgba(255, 99, 8, 0.1);
+}
+
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 .action-buttons {
@@ -265,6 +337,19 @@
   letter-spacing: 0.05em;
   font-weight: 600;
   font-size: 0.875rem;
+}
+
+/* Error message styling */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  color: #ef4444;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 1rem 0;
+  text-align: center;
 }
 
 /* Responsive design */

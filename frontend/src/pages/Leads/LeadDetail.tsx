@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  User, 
-  Building, 
-  Mail, 
-  Phone, 
-  Globe, 
-  Linkedin, 
-  MessageSquare, 
-  Target, 
+import {
   Activity,
+  ArrowLeft,
+  Building,
   Calendar,
-  Star,
-  Send,
   ChevronDown,
   Copy,
-  Eye
+  Eye,
+  Globe,
+  Linkedin,
+  Mail,
+  MessageSquare,
+  Phone,
+  Sparkle,
+  Star,
+  Target,
+  User
 } from 'lucide-react';
-import OutreachModal from '../../components/OutreachModal/OutreachModal';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import GrokConsultModal from '../../components/GrokConsultModal/GrokConsultModal';
+import LoadingSpinner from '../../components/LoadingSpinner';
+import OutreachModal from '../../components/OutreachModal/OutreachModal';
 import './LeadDetail.css';
 
 interface Lead {
@@ -227,10 +228,7 @@ const LeadDetail: React.FC = () => {
   if (loading) {
     return (
       <div className="lead-detail-container">
-        <div className="loading-state">
-          <div className="spinner"></div>
-          <p>Loading lead details...</p>
-        </div>
+        <LoadingSpinner message="Loading lead details..." />
       </div>
     );
   }
@@ -261,7 +259,7 @@ const LeadDetail: React.FC = () => {
             onClick={() => setShowOutreachModal(true)}
             className="btn btn-primary"
           >
-            <Send size={16} />
+            <Sparkle size={16} />
             Generate Outreach
           </button>
           <button 

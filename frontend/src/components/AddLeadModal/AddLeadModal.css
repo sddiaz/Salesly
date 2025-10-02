@@ -1,4 +1,4 @@
-/* AddLeadModal - Specific Styles */
+/* AddLeadModal - Modern Form Styles */
 
 .modal-header h2 {
   background: var(--accent-gradient);
@@ -13,31 +13,246 @@
   padding: var(--spacing-lg);
 }
 
+/* Modern Form Group Styling */
+.form-group {
+  margin-bottom: var(--spacing-xl);
+}
+
+.form-group label {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--spacing-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+  transition: color var(--transition-fast);
+}
+
 .form-group label svg {
   flex-shrink: 0;
   color: var(--text-muted);
-  margin-right: 3px;
+  transition: color var(--transition-fast);
 }
 
+/* Modern Input Styling */
 .form-group input,
 .form-group select,
 .form-group textarea {
-  min-height: 40px;
-  line-height: 1.4;
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  transition: all var(--transition-normal);
+  outline: none;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Focus States */
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent-orange);
+  background: var(--bg-primary);
+  box-shadow: 
+    inset 0 1px 2px rgba(0, 0, 0, 0.1),
+    0 0 0 3px rgba(255, 122, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.form-group input:focus + label,
+.form-group select:focus + label,
+.form-group textarea:focus + label {
+  color: var(--accent-orange);
+}
+
+.form-group input:focus + label svg,
+.form-group select:focus + label svg,
+.form-group textarea:focus + label svg {
+  color: var(--accent-orange);
+}
+
+/* Hover States */
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+  border-color: var(--border-medium);
+  background: var(--bg-secondary);
+}
+
+/* Placeholder Styling */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Select Dropdown Styling */
+.modal-form .form-group select {
+  cursor: pointer;
+  appearance: none;
+  background: var(--bg-tertiary) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23a0a0a0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") no-repeat right var(--spacing-md) center !important;
+  background-size: 16px 16px !important;
+  padding-right: calc(var(--spacing-md) + 24px);
+}
+
+.modal-form .form-group select:focus {
+  background: var(--bg-primary) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23FF7A00' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") no-repeat right var(--spacing-md) center !important;
+  background-size: 16px 16px !important;
+}
+
+/* Textarea Specific */
 .form-group textarea {
-  min-height: 60px;
-  max-height: 120px;
-  font-family: inherit;
+  min-height: 100px;
+  max-height: 200px;
+  resize: vertical;
+  font-family: var(--font-sans);
+  line-height: 1.6;
 }
 
+/* Required Field Indicator */
+.form-group label:has(+ input[required])::after,
+.form-group label:has(+ select[required])::after {
+  content: "*";
+  color: var(--accent-orange);
+  margin-left: var(--spacing-xs);
+  font-weight: 700;
+}
+
+/* Input Groups for Icons */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon input {
+  padding-left: calc(var(--spacing-md) + 24px);
+}
+
+.input-with-icon .input-icon {
+  position: absolute;
+  left: var(--spacing-md);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color var(--transition-fast);
+}
+
+.input-with-icon input:focus + .input-icon {
+  color: var(--accent-orange);
+}
+
+/* Modal Actions */
 .modal-actions {
   display: flex;
   gap: var(--spacing-md);
   justify-content: flex-end;
   padding-top: var(--spacing-lg);
   border-top: 1px solid var(--border-light);
+  margin-top: var(--spacing-lg);
+}
+
+/* Enhanced Button States */
+.modal-actions .btn {
+  min-width: 120px;
+  justify-content: center;
+  font-weight: 600;
+  transition: all var(--transition-normal);
+}
+
+.modal-actions .btn-primary {
+  background: var(--accent-gradient);
+  border: 1px solid transparent;
+  box-shadow: 0 2px 4px rgba(255, 122, 0, 0.2);
+}
+
+.modal-actions .btn-primary:hover {
+  background: var(--accent-gradient) !important;
+  border-color: transparent !important;
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.3);
+}
+
+.modal-actions .btn-primary:disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  border-color: var(--border-light);
+  transform: none;
+  box-shadow: none;
+}
+
+.modal-actions .btn-secondary {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-medium);
+  color: var(--text-primary);
+}
+
+.modal-actions .btn-secondary:hover {
+  background: var(--bg-secondary) !important;
+  border-color: var(--accent-orange) !important;
+  color: var(--text-primary) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(255, 122, 0, 0.2);
+}
+
+/* Form Grid Enhancement */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* Animation for form interactions */
+@keyframes inputFocus {
+  0% {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    transform: translateY(-1px);
+    box-shadow: 
+      inset 0 1px 2px rgba(0, 0, 0, 0.1),
+      0 0 0 3px rgba(255, 122, 0, 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Error States */
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+  border-color: var(--error);
+  background: rgba(255, 68, 68, 0.05);
+}
+
+.form-group.error label {
+  color: var(--error);
+}
+
+.form-group.error label svg {
+  color: var(--error);
+}
+
+.field-error {
+  display: block;
+  color: var(--error);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  margin-top: var(--spacing-xs);
+  font-weight: 500;
 }
 
 @keyframes slideIn {

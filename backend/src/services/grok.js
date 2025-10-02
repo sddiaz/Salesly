@@ -164,50 +164,75 @@ Respond in valid JSON format:
     const messageTypeMap = {
       initial_outreach: {
         description: 'Professional initial outreach email that establishes credibility and provides clear value',
-        maxLength: 250,
-        tone: 'professional but approachable'
+        maxLength: 200,
+        tone: 'professional, conversational, and genuinely helpful'
+      },
+      email: {
+        description: 'Professional email outreach message',
+        maxLength: 200,
+        tone: 'professional, conversational, and genuinely helpful'
       },
       follow_up: {
         description: 'Follow-up email that references previous interaction and adds new value',
-        maxLength: 200,
-        tone: 'persistent but respectful'
+        maxLength: 180,
+        tone: 'persistent but respectful and helpful'
+      },
+      linkedin: {
+        description: 'LinkedIn connection request or message',
+        maxLength: 150,
+        tone: 'professional, personal, and authentic'
       },
       linkedin_message: {
         description: 'LinkedIn connection request or message',
-        maxLength: 200,
-        tone: 'professional and personal'
+        maxLength: 150,
+        tone: 'professional, personal, and authentic'
       },
       call_script: {
-        description: 'Phone call opening script (30-60 seconds)',
-        maxLength: 150,
-        tone: 'conversational and confident'
+        description: 'Phone call opening script (30-45 seconds)',
+        maxLength: 120,
+        tone: 'conversational, confident, and natural'
       }
     };
 
     const typeConfig = messageTypeMap[messageType] || messageTypeMap.initial_outreach;
 
-    const prompt = `You are an expert sales copywriter specializing in B2B outreach. Create a ${typeConfig.description} for this lead.
+    const prompt = `You are writing a professional business outreach message. Write naturally as a business professional who has done research on the prospect and wants to start a genuine business conversation.
 
-LEAD INFORMATION:
+PROSPECT INFORMATION:
 Name: ${leadData.first_name} ${leadData.last_name}
 Company: ${leadData.company}
 Title: ${leadData.title}
 Industry: ${leadData.industry}
 Company Size: ${leadData.company_size}
-Current Status: ${leadData.status}
 
-CONTEXT & INSIGHTS:
-${context.company_info || 'No additional company information available'}
+RESEARCH INSIGHTS (use selectively and naturally):
+${context.company_info || 'No additional context provided'}
 ${context.recent_news || ''}
 ${context.mutual_connections || ''}
 ${context.previous_interactions ? `Previous interactions: ${JSON.stringify(context.previous_interactions)}` : ''}
 
-REQUIREMENTS:
+MESSAGE REQUIREMENTS:
 - Tone: ${typeConfig.tone}
 - Maximum length: ${typeConfig.maxLength} words
-- Personalize based on their specific role and company
-- Include relevant industry insights or pain points
-- Clear value proposition relevant to their position
+- Write as yourself reaching out person-to-person (not as "an expert" or service provider)
+- SUBTLY reference insights from your research - don't dump all the context
+- Pick 1-2 most relevant details and weave them naturally into conversation
+- Focus on THEIR challenges/opportunities, not what you offer
+- Ask a thoughtful question that shows you understand their world
+- Be genuinely curious about their perspective
+- Avoid mentioning specific dollar amounts, statistics, or obvious public information
+- Sound like you're reaching out because you have a genuine reason, not just to sell
+- Make it feel like the beginning of a real business conversation
+
+EXAMPLES OF GOOD VS BAD CONTEXT USAGE:
+❌ BAD: "I saw you recently invested $3.2 billion in healthcare technology..."
+✅ GOOD: "I imagine the healthcare expansion at Walmart brings interesting challenges around..."
+
+❌ BAD: "As an expert in B2B solutions, I help companies like yours..."
+✅ GOOD: "I've been thinking about how retail companies navigate..."
+
+❌ BAD: "Your company just announced..." (stating obvious news)
+✅ GOOD: "I'm curious how you're thinking about..." (showing genuine interest)
 - Specific, actionable call-to-action
 - Avoid generic sales language
 - Reference something specific about their company/role
