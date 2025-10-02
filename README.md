@@ -316,10 +316,4 @@ client/src/
 - **DevOps**: Docker, Docker Compose
 - **AI**: Grok-3-mini model with custom prompts
 
-## 📝 License
-
-This project is created for the xAI assessment and demonstrates production-ready SDR automation capabilities.
-
 ---
-
-**Built with ❤️ for xAI Engineering Assessment**
