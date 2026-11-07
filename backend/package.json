@@ -5,12 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "nodemon server.js",
-    "client": "cd client && npm start",
-    "build": "cd client && npm run build",
-    "setup": "npm install && cd client && npm install",
-    "test": "jest",
+    "dev": "nodemon server.js",
+    "test": "jest --passWithNoTests",
     "eval": "node evaluation/run-evals.js"
   },
   "dependencies": {
@@ -23,7 +19,7 @@
     "joi": "^17.11.0",
     "morgan": "^1.10.0",
     "openai": "^4.28.0",
-    "rate-limiter-flexible": "^3.0.8",
+    "rate-limiter-flexible": "^7.4.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

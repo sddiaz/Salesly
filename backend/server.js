@@ -4,6 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const fs = require('fs');
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 
 // Import our modules
@@ -18,7 +19,7 @@ const PORT = process.env.PORT || 3001;
 
 // Rate limiting
 const rateLimiter = new RateLimiterMemory({
-  keyTimeout: 60 * 1000, // 1 minute
+  duration: 60, // seconds
   points: 100, // 100 requests per minute
 });
 
@@ -36,12 +37,16 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'", "https://apis.google.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
       imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://*.googleapis.com", "https://*.firebaseapp.com", "https://*.google.com"],
+      frameSrc: ["'self'", "https://*.firebaseapp.com", "https://accounts.google.com"],
     },
   },
 }));
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
@@ -60,28 +65,18 @@ app.get('/health', (req, res) => {
   });
 });
 
-// For development: simple API status page
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Grok SDR API Server',
-    status: 'running',
-    version: require('./package.json').version,
-    endpoints: {
-      health: '/health',
-      api: '/api',
-      leads: '/api/leads',
-      dashboard: '/api/analytics/dashboard'
-    }
+// Serve the React build (copied to ./public in Docker) with SPA fallback
+const publicDir = path.join(__dirname, 'public');
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir));
+  app.get(/^\/(?!api\/|health).*/, (req, res) => {
+    res.sendFile(path.join(publicDir, 'index.html'));
   });
-});
-
-// Serve static files from React build (commented out for development)
-// app.use(express.static(path.join(__dirname, 'client/build')));
-
-// Serve React app for all other routes (commented out for development)
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'client/build/index.html'));
-// });
+} else {
+  app.get('/', (req, res) => {
+    res.json({ message: 'Salesly API', status: 'running', health: '/health' });
+  });
+}
 
 // Error handling
 app.use(notFound);

@@ -1,319 +1,99 @@
 [DEMO](https://drive.google.com/file/d/1za4oTDRFVq4g-CpvKISKvCbDBw_hXFzW/view?usp=sharing)
-# Grok-Powered Sales Rep
 
-This is an intelligent Sales Development Representative (SDR) system leveraging Grok AI to enhance and automate the sales prospecting process.
+# Salesly
+
+An AI sales development rep. Salesly uses Grok (xAI) to score leads, draft personalized outreach, and advise on strategy. Each user signs in with Firebase Auth and sees only their own data in Firestore.
 
 ## Features
 
-### Core Features
-
-- **Lead Management**: CRUD operations with comprehensive lead data
-- **AI-Powered Lead Scoring**: Grok-based qualification assessment with customizable criteria
-- **Personalized Messaging**: AI-generated outreach messages tailored to lead profiles
-- **Grok Consultation**: Interactive AI assistant for lead strategy and insights
-- **Real-time Dashboard**: Analytics and pipeline visualization
-- **Activity Tracking**: Comprehensive lead interaction history
-
-### Technical Highlights
-
-- **Grok API Integration**: Advanced prompt engineering for sales use cases
-- **Evaluation Framework**: Systematic testing and optimization of AI performance
-- **Production-Ready**: Error handling, rate limiting, validation, and security
-- **Modern UI**: React TypeScript frontend with professional design
-- **RESTful API**: Comprehensive backend with SQLite database
+- **Lead management**: create, edit, filter, and track leads through pipeline statuses
+- **AI lead scoring**: Grok-based qualification with customizable criteria and a rule-based fallback
+- **Personalized messaging**: AI-generated outreach tailored to each lead
+- **Grok consultation**: per-lead and general strategy chat
+- **Dashboard and analytics**: pipeline stats, status distribution, recent activity
+- **Activity tracking**: interaction history per lead
+- **Evaluation framework**: scripted tests for scoring, messaging, conversation, and competitive analysis
 
 ## Architecture
 
 ```
-├── backend/                 # Node.js/Express API server
-│   ├── src/
-│   │   ├── services/       # Grok AI service layer
-│   │   ├── routes/         # API endpoints
-│   │   ├── database/       # SQLite database layer
-│   │   ├── middleware/     # Error handling, validation
-│   │   └── utils/          # Utilities and validation
-│   ├── evaluation/         # AI evaluation framework
-│   ├── scripts/           # Database seeding scripts
-│   ├── client/            # Backend's client package (development)
-│   └── data/              # SQLite database file
-│
-├── client/                 # React TypeScript frontend
-│   └── src/
-│       ├── components/     # Reusable UI components
-│       ├── pages/         # Main application pages
-│       ├── hooks/         # Custom React hooks
-│       └── styles/        # CSS styling
-│
-├── docker-compose.yml      # Container orchestration
-└── Dockerfile             # Multi-stage production build
+backend/    Express API (Firestore, Firebase Admin, Grok via the OpenAI SDK)
+  server.js            entry point; also serves the built frontend from ./public
+  src/routes/          REST API (firestore-api.js)
+  src/services/        grok.js (AI), firestore.js (data layer)
+  evaluation/          AI evaluation framework
+  scripts/             demo data seeding
+frontend/   React + TypeScript (Create React App), Firebase Auth
+Dockerfile  Multi-stage: builds the frontend, then runs the API serving it
+render.yaml Render blueprint
 ```
 
-## 🛠️ Local Development Setup
+Every `/api` request must carry `Authorization: Bearer <Firebase ID token>`; the server verifies it and scopes data to that user.
 
-### Prerequisites
+## Local development
 
-- Node.js 16+ (18+ recommended)
-- npm or yarn
-- Git
-
-### Quick Start
-
-1. **Clone and Setup**
-
-   ```bash
-   git clone <repository-url>
-   cd xai-assessment
-   ```
-
-2. **Backend Setup**
-
-   ```bash
-   cd backend
-   npm install
-
-   # Create environment file
-   cp .env.example .env
-   # Add your XAI_API_KEY to .env
-
-   # Start backend server
-   npm start
-   ```
-
-3. **Frontend Setup** (new terminal)
-
-   ```bash
-   cd client
-   npm install
-   npm start
-   ```
-
-4. **Access Application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001/api
-   - Health Check: http://localhost:3001/health
-
-### Environment Variables
-
-```env
-# Required
-XAI_API_KEY=your_grok_api_key_here
-
-# Optional
-NODE_ENV=development
-PORT=3001
-DATABASE_PATH=./data/sdr_system.db
-```
-
-## 🐳 Docker Deployment
-
-### Quick Deploy
+Prerequisites: Node 20+, a Firebase project (Auth with Google enabled, Firestore), and an xAI API key.
 
 ```bash
-# Set your API key
-export XAI_API_KEY=your_grok_api_key_here
+# Backend (terminal 1)
+cd backend
+npm install
+cp .env.example .env     # fill in XAI_API_KEY, FIREBASE_PROJECT_ID, and a service account path
+npm run dev              # http://localhost:3001
 
-# Build and run
-docker-compose up --build
+# Frontend (terminal 2)
+cd frontend
+npm install
+cp .env.example .env     # fill in the Firebase web config
+npm start                # http://localhost:3000 (proxies /api to :3001)
 ```
 
-### Production Deploy
+For local development set `NODE_ENV=development` and `FIREBASE_SERVICE_ACCOUNT_PATH` in `backend/.env`. In that mode, requests without a token fall back to a default dev user.
 
-```bash
-# Build production image
-docker build -t grok-sdr:latest .
+### Environment variables
 
-# Run with environment
-docker run -d \
-  -p 3001:3001 \
-  -e XAI_API_KEY=your_key \
-  -v grok_data:/app/data \
-  grok-sdr:latest
-```
+| Where | Variable | Purpose |
+| --- | --- | --- |
+| backend | `XAI_API_KEY` | Grok API key (required) |
+| backend | `FIREBASE_PROJECT_ID` | Firebase project (required) |
+| backend | `FIREBASE_SERVICE_ACCOUNT_JSON` | Service account JSON on one line (production) |
+| backend | `FIREBASE_SERVICE_ACCOUNT_PATH` | Service account file (local dev) |
+| frontend | `REACT_APP_FIREBASE_*` | Firebase web config, baked in at build time |
 
-## API Documentation
+## Deploy to Render
 
-### Core Endpoints
+1. In Firebase, create a service account key (Project settings > Service accounts) and add your Render domain under Authentication > Settings > Authorized domains.
+2. In Render, choose New > Blueprint and select this repo. `render.yaml` defines one Docker web service.
+3. Fill in the environment variables it asks for (see the table above). Put the whole service account JSON in `FIREBASE_SERVICE_ACCOUNT_JSON`.
+4. Deploy. Health check: `/health`.
 
-#### Leads Management
+The `REACT_APP_FIREBASE_*` values are public web config and are compiled into the frontend, so changing them needs a rebuild.
 
-- `GET /api/leads` - List leads with filtering/pagination
-- `POST /api/leads` - Create new lead
-- `GET /api/leads/:id` - Get lead details with activities
-- `PUT /api/leads/:id` - Update lead
-- `DELETE /api/leads/:id` - Delete lead
+Run the same image locally with `docker compose up --build` (reads the variables from your shell or a root `.env`).
 
-#### AI Features
-
-- `POST /api/leads/:id/score` - Score lead qualification
-- `POST /api/leads/:id/messages/generate` - Generate personalized message
-- `POST /api/leads/:id/consult` - Consult Grok about lead strategy
-
-#### Analytics
-
-- `GET /api/analytics/dashboard` - Dashboard statistics
-- `GET /api/health` - System health check
-
-### Example API Calls
-
-**Create Lead:**
-
-```bash
-curl -X POST http://localhost:3001/api/leads \
-  -H "Content-Type: application/json" \
-  -d '{
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john@company.com",
-    "company": "Tech Corp",
-    "title": "VP Engineering",
-    "industry": "Technology"
-  }'
-```
-
-**Score Lead:**
-
-```bash
-curl -X POST http://localhost:3001/api/leads/1/score \
-  -H "Content-Type: application/json" \
-  -d '{
-    "criteria_ids": [1, 2, 3]
-  }'
-```
-
-**Consult Grok:**
-
-```bash
-curl -X POST http://localhost:3001/api/leads/1/consult \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "What is the best outreach strategy for this lead?"
-  }'
-```
-
-## 🧪 Evaluation Framework
-
-The system includes a comprehensive evaluation framework for testing and optimizing Grok performance:
+## Scripts
 
 ```bash
 cd backend
-node evaluation/run-evals.js
+npm run eval                                    # run AI evaluations (calls the Grok API)
+node scripts/seed-demo-data.js <firebase-uid>   # add sample leads for a user
 ```
 
-**Evaluation Categories:**
+## API
 
-- Lead scoring accuracy and consistency
-- Message personalization quality
-- Response relevance and helpfulness
-- Error handling and edge cases
+All routes are under `/api` and require a bearer token.
 
-## 🎯 Demo Features
+- `GET/POST /leads`, `GET/PUT/DELETE /leads/:id`, `PUT /leads/:id/status`
+- `POST /leads/:id/score`, `POST /leads/:id/messages/generate`, `POST /leads/:id/messages`
+- `POST /leads/:id/activities`
+- `POST /leads/:id/consult`, `POST /grok/consult`
+- `GET /analytics/dashboard`
+- `GET/PUT /user/profile`, `DELETE /user/account`
 
-### Dashboard Analytics
+## Security
 
-- Total leads and pipeline overview
-- Lead status distribution
-- Average scoring metrics
-- Recent activity feed
-- AI-powered insights
+Rate limiting (100 requests/minute per IP), input validation with Joi, Helmet security headers with a CSP that allows Firebase Auth, and Firebase ID token verification on every API call.
 
-### Lead Management
+## License
 
-- Create/edit leads with comprehensive data
-- Advanced filtering and search
-- Lead scoring with custom criteria
-- Activity and message history
-
-### Grok AI Integration
-
-- Real-time lead consultation
-- Personalized message generation
-- Strategic outreach recommendations
-- Context-aware responses
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Backend won't start:**
-
-```powershell
-# Check if port 3001 is in use
-netstat -an | findstr :3001
-
-# Kill existing process and restart
-# On Windows: taskkill /F /PID <PID>
-```
-
-**Frontend can't connect to API:**
-
-- Verify backend is running on port 3001
-- Check proxy setting in client/package.json
-- Ensure no firewall blocking connections
-
-**Grok API errors:**
-
-- Verify XAI_API_KEY is set correctly
-- Check API key has sufficient credits
-- Review rate limiting in logs
-
-**Database issues:**
-
-```bash
-# Reset database
-rm backend/data/sdr_system.db
-npm start  # Will recreate with seed data
-```
-
-## 🔐 Security Features
-
-- Rate limiting (100 requests/minute per IP)
-- Input validation and sanitization
-- SQL injection prevention
-- Content Security Policy headers
-- CORS configuration
-- Error handling without information leakage
-
-## 📈 Performance Optimizations
-
-- Database indexing on frequently queried fields
-- Response caching for dashboard stats
-- Efficient pagination for large datasets
-- Connection pooling and query optimization
-- Frontend component memoization
-
-## 🚦 Production Considerations
-
-- **Monitoring**: Health checks and logging
-- **Scaling**: Horizontal scaling with load balancer
-- **Security**: HTTPS, authentication, API rate limiting
-- **Database**: PostgreSQL for production workloads
-- **Caching**: Redis for session and response caching
-- **CI/CD**: Automated testing and deployment pipelines
-
-## 🧑‍💻 Development
-
-### Project Structure
-
-```
-backend/src/
-├── services/grok.js       # Core Grok AI integration
-├── routes/api.js          # REST API endpoints
-├── database/init.js       # Database schema & operations
-├── middleware/error.js    # Error handling
-└── utils/validation.js    # Input validation
-
-client/src/
-├── pages/                 # Main application screens
-├── components/            # Reusable UI components
-├── hooks/                 # Custom React hooks
-└── styles/               # CSS and styling
-```
-
-### Key Technologies
-
-- **Backend**: Node.js, Express, SQLite, Grok API
-- **Frontend**: React, TypeScript, CSS3
-- **DevOps**: Docker, Docker Compose
-- **AI**: Grok-3-mini model with custom prompts
-
----
+MIT

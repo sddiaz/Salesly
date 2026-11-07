@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, MessageSquare, Zap, Send, Lightbulb, TrendingUp, Target } from 'lucide-react';
+import { X, Zap, Send, Lightbulb, TrendingUp, Target } from 'lucide-react';
 import './GeneralGrokModal.css';
 
 interface GeneralGrokModalProps {
