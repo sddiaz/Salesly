@@ -17,8 +17,15 @@ function initializeFirebaseAdmin() {
       });
       
       console.log('✅ Firebase Admin SDK initialized with service account');
+    } else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+      // Production (e.g. Render): service account JSON supplied via env var
+      admin.initializeApp({
+        credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON)),
+        projectId: process.env.FIREBASE_PROJECT_ID
+      });
+      console.log('✅ Firebase Admin SDK initialized with service account env var');
     } else {
-      // Production: Use environment variables or default credentials
+      // Fallback: default credentials
       admin.initializeApp({
         projectId: process.env.FIREBASE_PROJECT_ID
       });

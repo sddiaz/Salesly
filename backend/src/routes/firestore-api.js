@@ -1,4 +1,5 @@
 const express = require('express');
+const admin = require('firebase-admin');
 const { FirestoreService } = require('../services/firestore');
 const { GrokSDRService } = require('../services/grok');
 const { 
@@ -11,24 +12,23 @@ const {
 const router = express.Router();
 const firestoreService = new FirestoreService();
 
-// Middleware to extract user ID from Firebase Auth token
+// Verify the Firebase ID token sent as "Authorization: Bearer <token>"
 const authenticateUser = async (req, res, next) => {
   try {
-    // In a real app, you'd verify the Firebase token here
-    // For development, we'll use a header or create a default user
-    let userId = req.headers['x-user-id'] || req.user?.uid;
-    
-    // For development only - create a default user if none provided
-    if (!userId && process.env.NODE_ENV === 'development') {
-      userId = 'dev-user-123'; // Default development user ID
+    const match = /^Bearer (.+)$/.exec(req.headers.authorization || '');
+    if (match) {
+      const decoded = await admin.auth().verifyIdToken(match[1]);
+      req.userId = decoded.uid;
+      return next();
     }
-    
-    if (!userId) {
-      return res.status(401).json({ error: { message: 'Authentication required' } });
+
+    // Local development only: allow an explicit header or a default user
+    if (process.env.NODE_ENV === 'development') {
+      req.userId = req.headers['x-user-id'] || 'dev-user-123';
+      return next();
     }
-    
-    req.userId = userId;
-    next();
+
+    return res.status(401).json({ error: { message: 'Authentication required' } });
   } catch (error) {
     res.status(401).json({ error: { message: 'Invalid authentication' } });
   }

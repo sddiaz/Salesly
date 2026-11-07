@@ -1,12 +1,13 @@
 import React from 'react';
 import { useAuth } from '../firebase/AuthContext';
+import { auth } from '../firebase/config';
 
 class ApiService {
   constructor() {
     this.baseURL = '/api';
   }
 
-  // Get current user ID (to be used as X-User-ID header)
+  // Get current user ID (informational only; auth uses the ID token)
   getCurrentUserId() {
     // This will be set by the component using the service
     return this.currentUserId;
@@ -25,9 +26,10 @@ class ApiService {
       ...options.headers
     };
 
-    // Add user ID header if available
-    if (this.currentUserId) {
-      headers['X-User-ID'] = this.currentUserId;
+    // Authenticate with the Firebase ID token; the backend verifies it
+    const firebaseUser = auth.currentUser;
+    if (firebaseUser) {
+      headers.Authorization = `Bearer ${await firebaseUser.getIdToken()}`;
     }
 
     const config = {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, MessageSquare, Zap, Send } from 'lucide-react';
+import { X, Zap, Send } from 'lucide-react';
 import './GrokConsultModal.css';
 
 interface GrokConsultModalProps {

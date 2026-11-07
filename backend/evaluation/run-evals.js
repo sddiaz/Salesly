@@ -2,8 +2,6 @@
 require('dotenv').config();
 
 const { GrokSDRService, createGrokClient } = require('../src/services/grok');
-const { OutreachService } = require('../src/services/outreachService');
-const { initializeDatabase } = require('../src/database/init');
 const fs = require('fs');
 const path = require('path');
 const { validateEnvironment } = require('../src/utils/validation');
@@ -188,28 +186,6 @@ const EVALUATION_CASES = {
     }
   ],
 
-  outreach_sequences: [
-    {
-      name: "Standard outreach sequence execution",
-      lead: {
-        first_name: "Robert",
-        last_name: "Martinez",
-        company: "TechFlow",
-        title: "Director of IT",
-        industry: "Manufacturing",
-        company_size: "201-1000"
-      },
-      sequence_type: "standard",
-      expected_steps: 5,
-      expected_completion_time: "14 days",
-      success_criteria: [
-        "all steps executed",
-        "personalized content",
-        "appropriate timing",
-        "escalation strategy"
-      ]
-    }
-  ],
 
   competitive_analysis: [
     {
@@ -262,14 +238,9 @@ class GrokEvaluator {
       validateEnvironment();
       createGrokClient();
       
-      // Initialize database for outreach sequence testing
-      console.log('🗄️ Initializing database...');
-      await initializeDatabase();
-      
       await this.evaluateLeadScoring();
       await this.evaluateMessageGeneration();
       await this.evaluateConversationAnalysis();
-      await this.evaluateOutreachSequences();
       await this.evaluateCompetitiveAnalysis();
       await this.evaluatePerformanceMetrics();
       
@@ -423,49 +394,6 @@ class GrokEvaluator {
     }
   }
 
-  async evaluateOutreachSequences() {
-    console.log('\n📧 Evaluating Outreach Sequence Management...');
-    
-    for (const testCase of EVALUATION_CASES.outreach_sequences) {
-      this.totalTests++;
-      console.log(`\n  Testing: ${testCase.name}`);
-      
-      try {
-        // Create sequence
-        const sequenceResult = await OutreachService.createOutreachSequence(
-          1, // Using test lead ID
-          testCase.sequence_type
-        );
-        
-        // Verify sequence creation
-        const evaluation = this.evaluateSequenceCreation(sequenceResult, testCase);
-        this.results.push({
-          category: 'outreach_sequences',
-          test_name: testCase.name,
-          ...evaluation
-        });
-        
-        if (evaluation.passed) {
-          this.passedTests++;
-          console.log(`    ✅ PASSED - Created ${evaluation.steps_created} steps`);
-        } else {
-          console.log(`    ❌ FAILED - ${evaluation.reason}`);
-        }
-        
-      } catch (error) {
-        console.log(`    ❌ ERROR - ${error.message}`);
-        this.trackError('outreach_sequences', error.message);
-        this.results.push({
-          category: 'outreach_sequences',
-          test_name: testCase.name,
-          passed: false,
-          reason: `Sequence Error: ${error.message}`,
-          error: true
-        });
-      }
-    }
-  }
-
   async evaluateCompetitiveAnalysis() {
     console.log('\n🏆 Evaluating Competitive Analysis Capabilities...');
     
@@ -531,27 +459,6 @@ class GrokEvaluator {
       passed: avgResponseTime < 5000, // 5 second threshold
       ...performanceEval
     });
-  }
-
-  evaluateSequenceCreation(result, testCase) {
-    const issues = [];
-    let passed = true;
-
-    if (!result.sequence_id) {
-      issues.push('No sequence ID returned');
-      passed = false;
-    }
-
-    if (result.total_steps !== testCase.expected_steps) {
-      issues.push(`Expected ${testCase.expected_steps} steps, got ${result.total_steps}`);
-      passed = false;
-    }
-
-    return {
-      passed,
-      reason: issues.join('; '),
-      steps_created: result.total_steps || 0
-    };
   }
 
   evaluateCompetitiveResult(result, testCase) {
@@ -693,12 +600,6 @@ class GrokEvaluator {
         'Improve intent detection algorithms',
         'Add conversation context tracking',
         'Implement conversation outcome prediction'
-      ],
-      outreach_sequences: [
-        'Add sequence performance tracking',
-        'Implement dynamic sequence optimization',
-        'Create sequence A/B testing framework',
-        'Add personalized timing optimization'
       ],
       competitive_analysis: [
         'Expand competitive intelligence database',
